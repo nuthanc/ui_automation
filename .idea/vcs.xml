@@ -2,5 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/instances_command_folder" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/k8s_contrail_command_deployment" vcs="Git" />
   </component>
 </project>
