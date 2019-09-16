@@ -40,6 +40,7 @@ default_vrouter_gateway = instances_data['contrail_configuration']['VROUTER_GATE
 contrail_config = instances_data['contrail_configuration']
 
 
+
 # Chrome driver
 driver = webdriver.Chrome("driver/chromedriver")
 
@@ -119,7 +120,7 @@ def cloud_manager():
         xpath_key = '//input[@id[contains(.,"contrailSchema_contrail_configuration_{}_key")]]'.format(i)
         xpath_value = '//input[@id[contains(.,"contrailSchema_contrail_configuration_{}_value")]]'.format(i)
         driver.find_element_by_xpath(xpath_key).send_keys(k)
-        driver.find_element_by_xpath(xpath_value).send_keys(v)
+        driver.find_element_by_xpath(xpath_value).send_keys(str(v))
         if i < len(contrail_config) - 1:
             driver.find_element_by_css_selector('.jws-btn.field-array__button-add.jws-btn-text.jws-btn-sm').send_keys(
                 Keys.ENTER)
@@ -185,5 +186,5 @@ if __name__ == '__main__':
     next()
     control_nodes()
     next()
-    # orchestrator_nodes()
+    orchestrator_nodes()
     # next()
