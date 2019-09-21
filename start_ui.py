@@ -125,11 +125,12 @@ def cloud_manager():
             driver.find_element_by_css_selector('.jws-btn.field-array__button-add.jws-btn-text.jws-btn-sm').send_keys(
                 Keys.ENTER)
 
-
+# Need to change from here
 # Step 7:Control nodes
 def control_nodes():
     # Select high availability mode
     driver.find_element_by_xpath("//span[text()='High availability mode']/preceding-sibling::span/input").click()
+    time.sleep(1)
     # Clicking the arrow button of available servers to assign control nodes
     for i, server in enumerate(
             driver.find_elements_by_xpath("//i[@class='jws jws-arrowTransfer_right jws-icon']/parent::button")):
@@ -139,7 +140,9 @@ def control_nodes():
     for i, combo in enumerate(driver.find_elements_by_xpath("//div[@role='combobox']")):
         combo.click()
         alarm_x_path = "(//li[text()='contrail_analytics_alarm_node'])[{}]".format(i + 1)
+        time.sleep(1)
         snmp_x_path = "(//li[text()='contrail_analytics_snmp_node'])[{}]".format(i + 1)
+        time.sleep(1)
         driver.find_element_by_xpath(alarm_x_path).click()
         driver.find_element_by_xpath(snmp_x_path).click()
 
@@ -157,34 +160,64 @@ def orchestrator_nodes():
         if i == 0:
             continue
         # clicking the li's which are not needed
-        if i == 1:
-            combo.click()
-            time.sleep(1)
-            kube_manager_x_path = "(//li[text()='kubernetes_kubemanager_node'])[{}]".format(i)
-            driver.find_element_by_xpath(kube_manager_x_path).click()
-        elif i == 2 or i == 3:
-            combo.click()
-            time.sleep(1)
-            master_node_x_path = "(//li[text()='kubernetes_master_node'])[{}]".format(i)
-            driver.find_element_by_xpath(master_node_x_path).click()
-            node_x_path = "//li[text()='kubernetes_node'][{}]".format(i)
-            driver.find_element_by_xpath(node_x_path).click()
+        # Optimize the below condition
+        if len(hostname_list) == 4:
+            if i == 1:
+                combo.click()
+                master_node_x_path = "(//li[text()='kubernetes_master_node'])[{}]".format(i)
+                driver.find_element_by_xpath(master_node_x_path).click()
+                kube_manager_x_path = "(//li[text()='kubernetes_kubemanager_node'])[{}]".format(i)
+                driver.find_element_by_xpath(kube_manager_x_path).click()
+            elif i == 2 or i == 3:
+                combo.click()
+                master_node_x_path = "(//li[text()='kubernetes_master_node'])[{}]".format(i)
+                driver.find_element_by_xpath(master_node_x_path).click()
+                node_x_path = "(//li[text()='kubernetes_node'])[{}]".format(i)
+                driver.find_element_by_xpath(node_x_path).click()
+            else:
+                combo.click()
+                kube_manager_x_path = "(//li[text()='kubernetes_node'])[{}]".format(i)
+                driver.find_element_by_xpath(kube_manager_x_path).click()
         else:
-            combo.click()
-            time.sleep(1)
-            master_node_x_path = "(//li[text()='kubernetes_master_node'])[{}]".format(i)
-            driver.find_element_by_xpath(master_node_x_path).click()
-            kube_manager_x_path = "(//li[text()='kubernetes_kubemanager_node'])[{}]".format(i)
-            driver.find_element_by_xpath(kube_manager_x_path).click()
+            if i == 1 or i == 2:
+                combo.click()
+                master_node_x_path = "(//li[text()='kubernetes_master_node'])[{}]".format(i)
+                driver.find_element_by_xpath(master_node_x_path).click()
+                kube_manager_x_path = "(//li[text()='kubernetes_kubemanager_node'])[{}]".format(i)
+                driver.find_element_by_xpath(kube_manager_x_path).click()
+            elif i == 3 or i == 4:
+                combo.click()
+                master_node_x_path = "(//li[text()='kubernetes_master_node'])[{}]".format(i)
+                driver.find_element_by_xpath(master_node_x_path).click()
+                node_x_path = "(//li[text()='kubernetes_node'])[{}]".format(i)
+                driver.find_element_by_xpath(node_x_path).click()
+            else:
+                combo.click()
+                kube_manager_x_path = "(//li[text()='kubernetes_node'])[{}]".format(i)
+                driver.find_element_by_xpath(kube_manager_x_path).click()
 
-
+# Step 9:Compute nodes
+def compute_nodes():
+    time.sleep(1)
+    driver.find_element_by_xpath("(//i[@class='jws jws-arrowTransfer_right jws-icon']/parent::button)[1]").send_keys(Keys.ENTER)
+    time.sleep(1)
+    driver.find_element_by_xpath("(//input[@label='Default Vrouter Gateway'])[1]").send_keys(default_vrouter_gateway)
+    if len(hostname_list) == 5:
+        driver.find_element_by_xpath("(//i[@class='jws jws-arrowTransfer_right jws-icon']/parent::button)[2]").send_keys(Keys.ENTER)
+        time.sleep(1)
+        driver.find_element_by_xpath("(//input[@label='Default Vrouter Gateway'])[2]").send_keys(default_vrouter_gateway)
+    next()
 
 if __name__ == '__main__':
-    # inventory()
+    inventory()
     next()
     cloud_manager()
     next()
     control_nodes()
     next()
     orchestrator_nodes()
-    # next()
+    next()
+    compute_nodes()
+    next()
+    next()
+    next()

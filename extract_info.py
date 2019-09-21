@@ -8,10 +8,9 @@ with open('instances_command_folder/command_servers.yml') as f:
 
 contrail_config = instances_data['contrail_configuration']
 
-for i, (k, v) in enumerate(contrail_config.items()):
-    print(k)
-    print(str(v))
-    print(type(str(v)))
 print(
-    "https://"+command_data['command_servers']['server1']['ip']
+    type(instances_data['test_configuration']['router_asn']),
 )
+
+with open('output.yml','w') as f:
+    yaml.dump(instances_data['test_configuration']['router_asn'],f)
