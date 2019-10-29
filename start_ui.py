@@ -169,7 +169,7 @@ def control_nodes():
         j = j + 1
 
 
-# Step 8:Orchestrator Nodes Not working as expected
+# Step 8:Orchestrator Nodes 
 def orchestrator_nodes():
     arrow_xpath = "//div[@title='{}']/following::i[@class='jws jws-arrowTransfer_right jws-icon']/parent::button"
     combo_xpath = "(//div[@role='combobox'])[{}]"
@@ -178,7 +178,7 @@ def orchestrator_nodes():
     driver.find_element_by_xpath("//li[text()='Kubernetes']").click()
 
     j = 2
-
+    # import pdb;pdb.set_trace()
     # K8S Master
     for master in k8s_master_nodes:
         arrow = arrow_xpath.format(master)
@@ -188,8 +188,8 @@ def orchestrator_nodes():
         driver.find_element_by_xpath(combo).click()
         time.sleep(1)
         # Click kubernetes_node to remove it
-        kube_manager_x_path = "(//li[text()='kubernetes_node'])[{}]".format(j-1)
-        driver.find_element_by_xpath(kube_manager_x_path).click()
+        node_x_path = "(//li[text()='kubernetes_node'])[{}]".format(j-1)
+        driver.find_element_by_xpath(node_x_path).click()
         j = j + 1
 
     # Kubemanager
@@ -250,6 +250,5 @@ if __name__ == '__main__':
     orchestrator_nodes()
     next()
     compute_nodes()
-    next()
     next()
     next()
