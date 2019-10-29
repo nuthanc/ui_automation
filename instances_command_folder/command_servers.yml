@@ -1,16 +1,16 @@
 command_servers:
     server1:
-        ip: 10.204.217.101
+        ip: 10.204.216.31
         connection: ssh
         ssh_user: root
         ssh_pass: c0ntrail123
         sudo_pass: c0ntrail123
-        ntpserver: 10.204.217.158
-        registry_insecure: false
-        container_registry: hub.juniper.net/contrail-nightly
-        container_tag: "1909.27"
-        container_registry_username: JNPR-Customer200
-        container_registry_password: FSg0vLW^7oM#GZy8Ju*f
+        ntpserver: 10.204.217.158 
+        registry_insecure: true
+        container_registry: 10.204.217.152:5000
+        container_tag: "1911.7"
+        # container_registry_username: JNPR-Customer200
+        # container_registry_password: FSg0vLW^7oM#GZy8Ju*f
         config_dir: /etc/contrail
 
         contrail_config:
