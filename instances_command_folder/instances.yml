@@ -5,9 +5,10 @@ deployment:
             registry: 10.204.217.152:5000
     sku: queens
     os: centos7
-    version: "1911.7"
+    version: "1911.16"
     orchestrator: kubernetes
     deployer: contrail-ansible-deployer
+
 provider_config:
   bms:
     ssh_pwd: c0ntrail123
@@ -15,9 +16,9 @@ provider_config:
     ntpserver: 10.204.217.158
     domainsuffix: englab.juniper.net
 instances:
-  testbed-1-vm1:
+  nodeg12:
     provider: bms
-    ip: 10.204.218.103
+    ip: 10.204.217.52
     roles:
       config_database:
       config:
@@ -27,9 +28,9 @@ instances:
       webui:
       k8s_master:
       kubemanager:
-  testbed-1-vm4:
+  nodeg31:
     provider: bms
-    ip: 10.204.218.100
+    ip: 10.204.217.71
     roles:
       config_database:
       config:
@@ -38,9 +39,9 @@ instances:
       analytics:
       webui:
       kubemanager:
-  testbed-1-vm5:
+  nodec58:
     provider: bms
-    ip: 10.204.218.101
+    ip: 10.204.217.98
     roles:
       config_database:
       config:
@@ -49,20 +50,20 @@ instances:
       analytics:
       webui:
       kubemanager:
-  testbed-1-vm2:
+  nodec60:
     provider: bms
-    ip: 10.204.218.104
+    ip: 10.204.217.100
     roles:
       k8s_node:
       vrouter:
-        VROUTER_GATEWAY: 192.168.1.11
-  testbed-1-vm3:
+        VROUTER_GATEWAY: 77.77.1.100
+  nodec61:
     provider: bms
-    ip: 10.204.218.105
+    ip: 10.204.217.101
     roles:
       k8s_node:
       vrouter:
-        VROUTER_GATEWAY: 192.168.1.11
+        VROUTER_GATEWAY: 77.77.1.100
 
 REGISTRY_PRIVATE_INSECURE: True
 CONTAINER_REGISTRY: 10.204.217.152:5000
@@ -70,34 +71,36 @@ CONTAINER_REGISTRY: 10.204.217.152:5000
 # CONTAINER_REGISTRY_PASSWORD: FSg0vLW^7oM#GZy8Ju*f
 
 contrail_configuration:
-  KUBERNETES_PUBLIC_FIP_POOL: {'project': 'k8s-default', 'domain': 'default-domain', 'name': '__fip_pool_public__', 'network': '__public__'}
-  KUBERNETES_IP_FABRIC_SUBNETS: 192.168.1.64/29
+  KUBERNETES_PUBLIC_FIP_POOL: {'project': 'default', 'domain': 'default-domain', 'name': '__fip_pool_public__', 'network': '__public__'}
+  KUBERNETES_IP_FABRIC_SUBNETS: 77.77.1.160/27
   CLOUD_ORCHESTRATOR: kubernetes
-  CONTROLLER_NODES: 10.204.218.103,10.204.218.100,10.204.218.101
-  CONTROL_NODES: 192.168.1.5,192.168.1.8,192.168.1.9
-  KUBERNETES_API_NODES: 192.168.1.5
-  KUBERNETES_API_SERVER: 192.168.1.5 
+  CONTROLLER_NODES: 10.204.217.52,10.204.217.71,10.204.217.98
+  CONTROL_NODES: 77.77.1.20,77.77.1.30,77.77.1.11
+  KUBERNETES_API_NODES: 77.77.1.20
+  KUBERNETES_API_SERVER: 77.77.1.20
   CONTAINER_REGISTRY: 10.204.217.152:5000
   # CONTAINER_REGISTRY_USERNAME: JNPR-Customer200
   # CONTAINER_REGISTRY_PASSWORD: FSg0vLW^7oM#GZy8Ju*f
   REGISTRY_PRIVATE_INSECURE: True
-  CONTRAIL_VERSION: "1911.7"
+  CONTRAIL_VERSION: "1911.16"
   RABBITMQ_NODE_PORT: 5673
-  VROUTER_GATEWAY: 192.168.1.11
+  VROUTER_GATEWAY: 77.77.1.100
   JVM_EXTRA_OPTS: "-Xms1g -Xmx2g"
   LOG_LEVEL: SYS_DEBUG
+  VNC_CURL_LOG_NAME: vnc_logs_k8s.log
 
 test_configuration:
-    cfgm0_host_string: root@10.204.218.103
+    cfgm0_host_string: root@10.204.217.52
     cfgm0_host_pwd: c0ntrail123
+    cluster_id: k8s_nodeg12_ha_setup
     image_web_server: 10.84.5.120
     use_project_scoped_token: True
     public_host: 10.84.5.120
     ext_routers:
-        hooper: 192.168.1.11
+        hooper: 77.77.1.100
     router_asn: 64512
-    public_rt: 10101
-    public_subnet: 10.204.219.200/29
+    public_rt: 11314
+    public_subnet: 10.204.219.96/29
     public_virtual_network: __public__
     fip_pool_name: __fip_pool_public__
     web_server:
@@ -108,7 +111,7 @@ test_configuration:
         log_path: /home/bhushana/Documents/technical/logs
         web_root: Docs/logs
     mail_server:
-        server: 10.47.226.20 
+        server: 10.47.226.20
         port: 25
         to: dl-contrail-sw-in@juniper.net
         sender: contrailbuild@juniper.net
@@ -120,122 +123,34 @@ server_manager:
   image: centos-7.4
   client: /cs-shared/server-manager/client/server-manager
 
-vm_info:
-  default:
-    image_dest: /mnt/disk1/images/
-    disk_format: qcow2
-    image_source: http://10.204.217.158/images/node_vm_images/centos-7.5-backward-compatible.qcow2.gz
-  hypervisors:      
-    kvm_nodel2:
-      username: root
-      ip: 10.204.218.250
-      password: c0ntrail123
-      vm_config:
-        host1:
-          name: testbed-1-vm1 
-          ram: 16384
-          vcpus: 8
-          server: 10.204.218.250
-          network:
-            interfaces:
-              intf1:
-                bridge: br0
-                mac: '52:54:00:01:00:01'
-                model: virtio
-              intf2:
-                bridge: br1
-                mac: '52:54:00:02:00:01'
-                model: virtio
-        host2:
-          name: testbed-1-vm2
-          ram: 8192
-          vcpus: 4
-          server: 10.204.218.250
-          network:
-            interfaces:
-              intf1:
-                bridge: br0
-                mac: '52:54:00:01:00:02'
-                model: virtio
-              intf2:
-                bridge: br1
-                mac: '52:54:00:02:00:02'
-                model: virtio
-        host3:
-          name: testbed-1-vm3
-          ram: 8192
-          vcpus: 8
-          server: 10.204.218.250
-          network:
-            interfaces:
-              intf1:
-                bridge: br0
-                mac: '52:54:00:01:00:03'
-                model: virtio
-              intf2:
-                bridge: br1
-                mac: '52:54:00:02:00:03'
-                model: virtio
-        host4:
-          name: testbed-1-vm4
-          ram: 16384
-          vcpus: 8
-          server: 10.204.218.250
-          network:
-            interfaces:
-              intf1:
-                bridge: br0
-                mac: '52:54:00:01:00:06'
-                model: virtio
-              intf2:
-                bridge: br1
-                mac: '52:54:00:02:00:04'
-                model: virtio
-        host5:
-          name: testbed-1-vm5
-          ram: 16384
-          vcpus: 8
-          server: 10.204.218.250
-          network:
-            interfaces:
-              intf1:
-                bridge: br0
-                mac: '52:54:00:01:00:07'
-                model: virtio
-              intf2:
-                bridge: br1
-                mac: '52:54:00:02:00:05'
-                model: virtio
-
-
 control_data:
-    testbed-1-vm1:
-        ip: 10.204.218.103
-        ctrldata_ip: 192.168.1.5
+    nodeg12:
+        ip: 10.204.217.52
+        ctrldata_ip: 77.77.1.20
         prefix: 24
-        gw: 192.168.1.11
-        device: eth1
-    testbed-1-vm2:
-        ip: 10.204.218.104
-        ctrldata_ip: 192.168.1.6
+        gw: 77.77.1.100
+        device: enp1s0f1
+    nodeg31:
+        ip: 10.204.217.71
+        ctrldata_ip: 77.77.1.30
         prefix: 24
-        gw: 192.168.1.11
-        device: eth1
-    testbed-1-vm3:
-        ip: 10.204.218.105
-        ctrldata_ip: 192.168.1.7
+        gw: 77.77.1.100
+        device: enp1s0f1
+    nodec58:
+        ip: 10.204.217.98
+        ctrldata_ip: 77.77.1.11
         prefix: 24
-        gw: 192.168.1.11
-        device: eth1
-    testbed-1-vm4:
-        ip: 10.204.218.100
-        ctrldata_ip: 192.168.1.8
+        gw: 77.77.1.100
+        device: enp2s0f1
+    nodec60:
+        ip: 10.204.217.100
+        ctrldata_ip: 77.77.1.21
         prefix: 24
-        gw: 192.168.1.11
-        device: eth1
-    testbed-1-vm5:
-        ip: 10.204.218.101
-        ctrldata_ip: 192.168.1.9
+        gw: 77.77.1.100
+        device: enp2s0f0
+    nodec61:
+        ip: 10.204.217.101
+        ctrldata_ip: 77.77.1.31
         prefix: 24
-        gw: 192.168.1.11
-        device: eth1
+        gw: 77.77.1.100
+        device: enp2s0f1

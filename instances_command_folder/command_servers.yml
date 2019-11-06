@@ -1,6 +1,6 @@
 command_servers:
     server1:
-        ip: 10.204.216.31
+        ip: 10.204.216.120
         connection: ssh
         ssh_user: root
         ssh_pass: c0ntrail123
@@ -8,7 +8,7 @@ command_servers:
         ntpserver: 10.204.217.158 
         registry_insecure: true
         container_registry: 10.204.217.152:5000
-        container_tag: "1911.7"
+        container_tag: "1911.16"
         # container_registry_username: JNPR-Customer200
         # container_registry_password: FSg0vLW^7oM#GZy8Ju*f
         config_dir: /etc/contrail
