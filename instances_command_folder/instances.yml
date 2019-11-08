@@ -5,7 +5,7 @@ deployment:
             registry: 10.204.217.152:5000
     sku: queens
     os: centos7
-    version: "1911.16"
+    version: "1911.18"
     orchestrator: kubernetes
     deployer: contrail-ansible-deployer
 
@@ -82,7 +82,7 @@ contrail_configuration:
   # CONTAINER_REGISTRY_USERNAME: JNPR-Customer200
   # CONTAINER_REGISTRY_PASSWORD: FSg0vLW^7oM#GZy8Ju*f
   REGISTRY_PRIVATE_INSECURE: True
-  CONTRAIL_VERSION: "1911.16"
+  CONTRAIL_VERSION: "1911.18"
   RABBITMQ_NODE_PORT: 5673
   VROUTER_GATEWAY: 77.77.1.100
   JVM_EXTRA_OPTS: "-Xms1g -Xmx2g"

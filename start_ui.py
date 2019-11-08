@@ -70,7 +70,7 @@ driver.get(command_server_ip)
 driver.find_element_by_id("userName").send_keys(username)
 driver.find_element_by_id("password").send_keys(password)
 driver.find_element_by_xpath('//*[@id="form-submit"]/span').click()
-time.sleep(3)
+time.sleep(2)
 
 
 # Step 1: Inventory
@@ -166,6 +166,7 @@ def control_nodes():
         driver.find_element_by_xpath(alarm_x_path).click()
         time.sleep(1)
         driver.find_element_by_xpath(snmp_x_path).click()
+        time.sleep(1)
         j = j + 1
 
 
@@ -250,5 +251,6 @@ if __name__ == '__main__':
     orchestrator_nodes()
     next()
     compute_nodes()
+    next()
     next()
     next()
