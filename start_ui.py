@@ -133,17 +133,17 @@ def cloud_manager():
     driver.execute_script("arguments[0].click();", element)
     time.sleep(1)
     # Clicking the Add button
-    driver.find_element_by_css_selector('.jws-btn.field-array__button-add.jws-btn-text.jws-btn-sm').send_keys(
-        Keys.ENTER)
+    # driver.find_element_by_css_selector('.jws-btn.field-array__button-add.jws-btn-text.jws-btn-sm').send_keys(
+    #     Keys.ENTER)
 
-    for i, (k, v) in enumerate(contrail_config.items()):
-        xpath_key = '//input[@id[contains(.,"contrailSchema_contrail_configuration_{}_key")]]'.format(i)
-        xpath_value = '//input[@id[contains(.,"contrailSchema_contrail_configuration_{}_value")]]'.format(i)
-        driver.find_element_by_xpath(xpath_key).send_keys(k)
-        driver.find_element_by_xpath(xpath_value).send_keys(str(v))
-        if i < len(contrail_config) - 1:
-            driver.find_element_by_css_selector('.jws-btn.field-array__button-add.jws-btn-text.jws-btn-sm').send_keys(
-                Keys.ENTER)
+    # for i, (k, v) in enumerate(contrail_config.items()):
+    #     xpath_key = '//input[@id[contains(.,"contrailSchema_contrail_configuration_{}_key")]]'.format(i)
+    #     xpath_value = '//input[@id[contains(.,"contrailSchema_contrail_configuration_{}_value")]]'.format(i)
+    #     driver.find_element_by_xpath(xpath_key).send_keys(k)
+    #     driver.find_element_by_xpath(xpath_value).send_keys(str(v))
+    #     if i < len(contrail_config) - 1:
+    #         driver.find_element_by_css_selector('.jws-btn.field-array__button-add.jws-btn-text.jws-btn-sm').send_keys(
+    #             Keys.ENTER)
 
 
 # Step 7:Control nodes
@@ -159,13 +159,14 @@ def control_nodes():
         # Clicking each control's arrow key
         driver.find_element_by_xpath(arrow_xpath).send_keys(Keys.ENTER)
         combo_xpath = "(//div[@role='combobox'])[{}]".format(j)
-        driver.find_element_by_xpath(combo_xpath).click()
+        combo_xpath = driver.find_element_by_xpath(combo_xpath)
+        alarm_x_path = "(//li[@title='contrail_analytics_alarm_node']//span)[{}]".format(j)
+        snmp_x_path = "(//li[@title='contrail_analytics_snmp_node']//span)[{}]".format(j)
         time.sleep(1)
-        alarm_x_path = "(//li[text()='contrail_analytics_alarm_node'])[{}]".format(j)
-        snmp_x_path = "(//li[text()='contrail_analytics_snmp_node'])[{}]".format(j)
         driver.find_element_by_xpath(alarm_x_path).click()
         time.sleep(1)
-        driver.find_element_by_xpath(snmp_x_path).click()
+        driver.execute_script("arguments[0].scrollTo(0,500)", combo_xpath)
+        # driver.find_element_by_xpath(snmp_x_path).click()
         time.sleep(1)
         j = j + 1
 
@@ -242,7 +243,7 @@ def compute_nodes():
 
 
 if __name__ == '__main__':
-    inventory()
+    # inventory()
     next()
     cloud_manager()
     next()
@@ -254,3 +255,4 @@ if __name__ == '__main__':
     next()
     next()
     next()
+    print("Touching the combobox is having problem")
