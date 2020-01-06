@@ -126,7 +126,8 @@ def cloud_manager():
     driver.execute_script("arguments[0].scrollTo(0,500)", element)
     driver.find_element_by_xpath("//label[text()='Encapsulation Priority']/following-sibling::div[@class]").click()
     time.sleep(1)
-    driver.find_element_by_xpath("//li[text()='VXLAN,MPLSoUDP,MPLSoGRE']").click()
+    driver.find_element_by_xpath(
+        "//div//span[text()='VXLAN,MPLSoUDP,MPLSoGRE']").click()
 
     # Contrail Configuration
     element = driver.find_element_by_class_name('arrow')
@@ -242,7 +243,7 @@ def compute_nodes():
 
 
 if __name__ == '__main__':
-    inventory()
+    # inventory()
     next()
     cloud_manager()
     next()
