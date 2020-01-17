@@ -5,7 +5,7 @@ deployment:
             registry: 10.204.217.152:5000
     sku: queens
     os: centos7
-    version: "1912.14"
+    version: "master.1015"
     orchestrator: kubernetes
     deployer: contrail-ansible-deployer
 
@@ -82,12 +82,16 @@ contrail_configuration:
   # CONTAINER_REGISTRY_USERNAME: JNPR-Customer200
   # CONTAINER_REGISTRY_PASSWORD: FSg0vLW^7oM#GZy8Ju*f
   REGISTRY_PRIVATE_INSECURE: True
-  CONTRAIL_VERSION: "1912.14"
+  CONTRAIL_VERSION: "master.1015"
   RABBITMQ_NODE_PORT: 5673
   VROUTER_GATEWAY: 77.77.1.100
   JVM_EXTRA_OPTS: "-Xms1g -Xmx2g"
   LOG_LEVEL: SYS_DEBUG
   VNC_CURL_LOG_NAME: vnc_logs_k8s.log
+  CONFIG_NODEMGR__DEFAULTS__minimum_diskGB: "2"
+  DATABASE_NODEMGR__DEFAULTS__minimum_diskGB: "2"
+  CONFIG_DATABASE_NODEMGR__DEFAULTS__minimum_diskGB: "2"
+
 
 test_configuration:
     cfgm0_host_string: root@10.204.217.52

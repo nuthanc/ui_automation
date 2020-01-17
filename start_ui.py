@@ -154,6 +154,7 @@ def control_nodes():
     time.sleep(1)
     # Clicking each control node and removing alarm and snmp components
     j = 1
+    k = 2
     for control in control_list:
         arrow_xpath = "//div[@title='{}']/following::i[@class='jws jws-arrowTransfer_right jws-icon']/parent::button"\
             .format(control)
@@ -162,8 +163,8 @@ def control_nodes():
         combo_xpath = "(//div[@role='combobox'])[{}]".format(j)
         driver.find_element_by_xpath(combo_xpath).click()
         time.sleep(1)
-        alarm_x_path = "(//li[text()='contrail_analytics_alarm_node'])[{}]".format(j)
-        snmp_x_path = "(//li[text()='contrail_analytics_snmp_node'])[{}]".format(j)
+        alarm_x_path = "(//span[text()='contrail_analytics_alarm_node'])[{}]".format(k)
+        snmp_x_path = "(//span[text()='contrail_analytics_snmp_node'])[{}]".format(k)
         driver.find_element_by_xpath(alarm_x_path).click()
         time.sleep(1)
         driver.find_element_by_xpath(snmp_x_path).click()
@@ -243,7 +244,8 @@ def compute_nodes():
 
 
 if __name__ == '__main__':
-    # inventory()
+    inventory()
+    # import pdb;pdb.set_trace()
     next()
     cloud_manager()
     next()

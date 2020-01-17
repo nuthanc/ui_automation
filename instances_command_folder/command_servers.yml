@@ -8,7 +8,7 @@ command_servers:
         ntpserver: 10.204.217.158 
         registry_insecure: true
         container_registry: 10.204.217.152:5000
-        container_tag: "1912.14"
+        container_tag: "master.1015"
         # container_registry_username: JNPR-Customer200
         # container_registry_password: FSg0vLW^7oM#GZy8Ju*f
         config_dir: /etc/contrail
