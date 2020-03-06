@@ -29,15 +29,17 @@ for i in instances_data['instances']:
     hostname_list.append(i)
 for k,v in instances_data['instances'].items():
     mgmt_ip_list.append(v['ip'])
-for k,v in instances_data['control_data'].items():
-    cntl_ip_list.append(v['ctrldata_ip'])
 
-insecure = instances_data['REGISTRY_PRIVATE_INSECURE']
-container_registry = instances_data['CONTAINER_REGISTRY']
+if 'control_data' in instances_data:
+    for k,v in instances_data['control_data'].items():
+        cntl_ip_list.append(v['ctrldata_ip'])
+
+insecure = instances_data['contrail_configuration']['REGISTRY_PRIVATE_INSECURE']
+container_registry = instances_data['contrail_configuration']['CONTAINER_REGISTRY']
 
 if not insecure:
-    container_registry_username = instances_data['CONTAINER_REGISTRY_USERNAME']
-    container_registry_password = instances_data['CONTAINER_REGISTRY_PASSWORD']
+    container_registry_username = instances_data['contrail_configuration']['CONTAINER_REGISTRY_USERNAME']
+    container_registry_password = instances_data['contrail_configuration']['CONTAINER_REGISTRY_PASSWORD']
 
 contrail_version = instances_data['contrail_configuration']['CONTRAIL_VERSION']
 ntp_server = instances_data['provider_config']['bms']['ntpserver']
@@ -70,7 +72,7 @@ driver.get(command_server_ip)
 driver.find_element_by_id("userName").send_keys(username)
 driver.find_element_by_id("password").send_keys(password)
 driver.find_element_by_xpath('//*[@id="form-submit"]/span').click()
-time.sleep(2)
+time.sleep(10)
 
 
 # Step 1: Inventory
@@ -85,12 +87,15 @@ def inventory():
 
         driver.find_element_by_xpath("//input[@label='Hostname']").send_keys(hostname_list[i])
         driver.find_element_by_css_selector('input[label="Management IP"]').send_keys(mgmt_ip_list[i])
-        driver.find_element_by_xpath("//span[text()='+ Add']/parent::button").send_keys(Keys.ENTER)
+        import pdb
+        pdb.set_trace()
 
-        time.sleep(1)
-        driver.find_element_by_css_selector('input[placeholder="Enter Name"]').send_keys("eth1")
-        driver.find_element_by_css_selector('input[label="IP Address"]').send_keys(cntl_ip_list[i])
-        driver.find_element_by_xpath("//span[text()='Create']/parent::button").send_keys(Keys.ENTER)
+        if cntl_ip_list:
+            driver.find_element_by_xpath("//span[text()='+ Add']/parent::button").send_keys(Keys.ENTER)
+            time.sleep(1)
+            driver.find_element_by_css_selector('input[placeholder="Enter Name"]').send_keys("eth1")
+            driver.find_element_by_css_selector('input[label="IP Address"]').send_keys(cntl_ip_list[i])
+            driver.find_element_by_xpath("//span[text()='Create']/parent::button").send_keys(Keys.ENTER)
 
         time.sleep(1)
 

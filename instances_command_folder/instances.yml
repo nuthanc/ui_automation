@@ -1,14 +1,6 @@
-deployment:
-    type:
-        contrail:
-            branch: master
-            registry: 10.204.217.152:5000
-    sku: queens
-    os: centos7
-    version: "master.1015"
-    orchestrator: kubernetes
-    deployer: contrail-ansible-deployer
-
+global_configuration:
+  REGISTRY_PRIVATE_INSECURE: True
+  CONTAINER_REGISTRY: bng-artifactory.juniper.net/contrail-nightly
 provider_config:
   bms:
     ssh_pwd: c0ntrail123
@@ -16,9 +8,9 @@ provider_config:
     ntpserver: 10.204.217.158
     domainsuffix: englab.juniper.net
 instances:
-  nodeg12:
+  nodec19:
     provider: bms
-    ip: 10.204.217.52
+    ip: 10.204.217.4
     roles:
       config_database:
       config:
@@ -28,133 +20,31 @@ instances:
       webui:
       k8s_master:
       kubemanager:
-  nodeg31:
+  nodec21:
     provider: bms
-    ip: 10.204.217.71
-    roles:
-      config_database:
-      config:
-      control:
-      analytics_database:
-      analytics:
-      webui:
-      kubemanager:
-  nodec58:
-    provider: bms
-    ip: 10.204.217.98
-    roles:
-      config_database:
-      config:
-      control:
-      analytics_database:
-      analytics:
-      webui:
-      kubemanager:
-  nodec60:
-    provider: bms
-    ip: 10.204.217.100
+    ip: 10.204.217.6
     roles:
       k8s_node:
       vrouter:
-        VROUTER_GATEWAY: 77.77.1.100
-  nodec61:
+        VROUTER_GATEWAY: 10.204.217.254
+  nodei18:
     provider: bms
-    ip: 10.204.217.101
+    ip: 10.204.217.130
     roles:
       k8s_node:
       vrouter:
-        VROUTER_GATEWAY: 77.77.1.100
-
-REGISTRY_PRIVATE_INSECURE: True
-CONTAINER_REGISTRY: 10.204.217.152:5000
-# CONTAINER_REGISTRY_USERNAME: JNPR-Customer200
-# CONTAINER_REGISTRY_PASSWORD: FSg0vLW^7oM#GZy8Ju*f
-
+        VROUTER_GATEWAY: 10.204.217.254
 contrail_configuration:
-  KUBERNETES_PUBLIC_FIP_POOL: {'project': 'default', 'domain': 'default-domain', 'name': '__fip_pool_public__', 'network': '__public__'}
-  KUBERNETES_IP_FABRIC_SUBNETS: 77.77.1.160/27
+  KUBERNETES_PUBLIC_FIP_POOL: {'project': 'k8s-default', 'domain': 'default-domain', 'name': '__fip_pool_public__', 'network': '__public__'}
+  KUBERNETES_IP_FABRIC_SUBNETS: 10.204.217.64/27
   CLOUD_ORCHESTRATOR: kubernetes
-  CONTROLLER_NODES: 10.204.217.52,10.204.217.71,10.204.217.98
-  CONTROL_NODES: 77.77.1.20,77.77.1.30,77.77.1.11
-  KUBERNETES_API_NODES: 77.77.1.20
-  KUBERNETES_API_SERVER: 77.77.1.20
-  CONTAINER_REGISTRY: 10.204.217.152:5000
-  # CONTAINER_REGISTRY_USERNAME: JNPR-Customer200
-  # CONTAINER_REGISTRY_PASSWORD: FSg0vLW^7oM#GZy8Ju*f
+  CONTROLLER_NODES: 10.204.217.4
+  CONTROL_NODES: 10.204.217.4
+  KUBERNETES_API_NODES: 10.204.217.4
+  KUBERNETES_API_SERVER: 10.204.217.4
+  CONTAINER_REGISTRY: bng-artifactory.juniper.net/contrail-nightly
   REGISTRY_PRIVATE_INSECURE: True
-  CONTRAIL_VERSION: "master.1015"
+  CONTRAIL_VERSION: "1912.37"
   RABBITMQ_NODE_PORT: 5673
-  VROUTER_GATEWAY: 77.77.1.100
-  JVM_EXTRA_OPTS: "-Xms1g -Xmx2g"
+  VROUTER_GATEWAY: 10.204.217.254
   LOG_LEVEL: SYS_DEBUG
-  VNC_CURL_LOG_NAME: vnc_logs_k8s.log
-  CONFIG_NODEMGR__DEFAULTS__minimum_diskGB: "2"
-  DATABASE_NODEMGR__DEFAULTS__minimum_diskGB: "2"
-  CONFIG_DATABASE_NODEMGR__DEFAULTS__minimum_diskGB: "2"
-
-
-test_configuration:
-    cfgm0_host_string: root@10.204.217.52
-    cfgm0_host_pwd: c0ntrail123
-    cluster_id: k8s_nodeg12_ha_setup
-    image_web_server: 10.84.5.120
-    use_project_scoped_token: True
-    public_host: 10.84.5.120
-    ext_routers:
-        hooper: 77.77.1.100
-    router_asn: 64512
-    public_rt: 11314
-    public_subnet: 10.204.219.96/29
-    public_virtual_network: __public__
-    fip_pool_name: __fip_pool_public__
-    web_server:
-        server: 10.204.216.50
-        username: bhushana
-        password: c0ntrail!23
-        report_path: /home/bhushana/Documents/technical/sanity/fb-sanity/FB-master-k8s-centos7-ha-ansible-sanity
-        log_path: /home/bhushana/Documents/technical/logs
-        web_root: Docs/logs
-    mail_server:
-        server: 10.47.226.20
-        port: 25
-        to: dl-contrail-sw-in@juniper.net
-        sender: contrailbuild@juniper.net
-
-server_manager:
-  ip: 10.204.217.158
-  username: root
-  password: c0ntrail123
-  image: centos-7.4
-  client: /cs-shared/server-manager/client/server-manager
-
-control_data:
-    nodeg12:
-        ip: 10.204.217.52
-        ctrldata_ip: 77.77.1.20
-        prefix: 24
-        gw: 77.77.1.100
-        device: enp1s0f1
-    nodeg31:
-        ip: 10.204.217.71
-        ctrldata_ip: 77.77.1.30
-        prefix: 24
-        gw: 77.77.1.100
-        device: enp1s0f1
-    nodec58:
-        ip: 10.204.217.98
-        ctrldata_ip: 77.77.1.11
-        prefix: 24
-        gw: 77.77.1.100
-        device: enp2s0f1
-    nodec60:
-        ip: 10.204.217.100
-        ctrldata_ip: 77.77.1.21
-        prefix: 24
-        gw: 77.77.1.100
-        device: enp2s0f0
-    nodec61:
-        ip: 10.204.217.101
-        ctrldata_ip: 77.77.1.31
-        prefix: 24
-        gw: 77.77.1.100
-        device: enp2s0f1

@@ -7,8 +7,8 @@ command_servers:
         sudo_pass: c0ntrail123
         ntpserver: 10.204.217.158 
         registry_insecure: true
-        container_registry: 10.204.217.152:5000
-        container_tag: "master.1015"
+        container_registry: bng-artifactory.juniper.net/contrail-nightly
+        container_tag: "1912.37"
         # container_registry_username: JNPR-Customer200
         # container_registry_password: FSg0vLW^7oM#GZy8Ju*f
         config_dir: /etc/contrail
