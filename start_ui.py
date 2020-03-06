@@ -3,6 +3,7 @@ import time
 from selenium.webdriver.common.keys import Keys
 import yaml
 
+# Extract data
 with open('instances_command_folder/instances.yml') as f:
     instances_data = yaml.safe_load(f)
 
@@ -15,7 +16,6 @@ password = "contrail123"
 cluster_name = "test_ui2"
 domain_suffix = "englab.juniper.net"
 
-command_server_ip = "https://" + command_data['command_servers']['server1']['ip'] + ":9091"
 hostname_list = []
 mgmt_ip_list = []
 cntl_ip_list = []
@@ -64,15 +64,20 @@ for node, value in instances_data['instances'].items():
         print("k8s_node:",node)
 
 # Chrome driver
-driver = webdriver.Chrome("driver/chromedriver")
-
+options = webdriver.ChromeOptions()
+options.add_argument('--allow-running-insecure-content')
+options.add_argument('--ignore-certificate-errors')
+driver = webdriver.Chrome("driver/chromedriver", chrome_options=options)
 driver.set_page_load_timeout(25)
-
+command_server_ip = "https://" + command_data['command_servers']['server1']['ip'] + ":9091"
 driver.get(command_server_ip)
+
+
+# Authentication
 driver.find_element_by_id("userName").send_keys(username)
 driver.find_element_by_id("password").send_keys(password)
 driver.find_element_by_xpath('//*[@id="form-submit"]/span').click()
-time.sleep(10)
+time.sleep(5)
 
 
 # Step 1: Inventory
@@ -87,16 +92,14 @@ def inventory():
 
         driver.find_element_by_xpath("//input[@label='Hostname']").send_keys(hostname_list[i])
         driver.find_element_by_css_selector('input[label="Management IP"]').send_keys(mgmt_ip_list[i])
-        import pdb
-        pdb.set_trace()
 
         if cntl_ip_list:
             driver.find_element_by_xpath("//span[text()='+ Add']/parent::button").send_keys(Keys.ENTER)
             time.sleep(1)
             driver.find_element_by_css_selector('input[placeholder="Enter Name"]').send_keys("eth1")
             driver.find_element_by_css_selector('input[label="IP Address"]').send_keys(cntl_ip_list[i])
-            driver.find_element_by_xpath("//span[text()='Create']/parent::button").send_keys(Keys.ENTER)
 
+        driver.find_element_by_xpath("//span[text()='Create']/parent::button").send_keys(Keys.ENTER)
         time.sleep(1)
 
 
@@ -132,7 +135,7 @@ def cloud_manager():
     driver.find_element_by_xpath("//label[text()='Encapsulation Priority']/following-sibling::div[@class]").click()
     time.sleep(1)
     driver.find_element_by_xpath(
-        "//div//span[text()='VXLAN,MPLSoUDP,MPLSoGRE']").click()
+        "//li[text()='VXLAN,MPLSoUDP,MPLSoGRE']").click()
 
     # Contrail Configuration
     element = driver.find_element_by_class_name('arrow')
@@ -155,7 +158,8 @@ def cloud_manager():
 # Step 7:Control nodes
 def control_nodes():
     # Select high availability mode
-    driver.find_element_by_xpath("//span[text()='High availability mode']/preceding-sibling::span/input").click()
+    if len(control_list) != 1:
+        driver.find_element_by_xpath("//span[text()='High availability mode']/preceding-sibling::span/input").click()
     time.sleep(1)
     # Clicking each control node and removing alarm and snmp components
     j = 1
@@ -168,8 +172,9 @@ def control_nodes():
         combo_xpath = "(//div[@role='combobox'])[{}]".format(j)
         driver.find_element_by_xpath(combo_xpath).click()
         time.sleep(1)
-        alarm_x_path = "(//li/span[text()='contrail_analytics_alarm_node'])[{}]".format(j)
-        snmp_x_path = "(//li/span[text()='contrail_analytics_snmp_node'])[{}]".format(j)
+        # import pdb;pdb.set_trace()
+        alarm_x_path = "(//li[text()='contrail_analytics_alarm_node'])[{}]".format(j)
+        snmp_x_path = "(//li[text()='contrail_analytics_snmp_node'])[{}]".format(j)
         driver.find_element_by_xpath(alarm_x_path).click()
         time.sleep(1)
         driver.find_element_by_xpath(snmp_x_path).click()
@@ -183,7 +188,7 @@ def orchestrator_nodes():
     combo_xpath = "(//div[@role='combobox'])[{}]"
     driver.find_element_by_css_selector(".ant-select-selection__rendered").click()
     time.sleep(1)
-    driver.find_element_by_xpath("//li/span[text()='Kubernetes']").click()
+    driver.find_element_by_xpath("//li[text()='Kubernetes']").click()
 
     j = 2
     # import pdb;pdb.set_trace()
@@ -196,7 +201,7 @@ def orchestrator_nodes():
         driver.find_element_by_xpath(combo).click()
         time.sleep(1)
         # Click kubernetes_node to remove it
-        node_x_path = "(//li/span[text()='kubernetes_node'])[{}]".format(j-1)
+        node_x_path = "(//li[text()='kubernetes_node'])[{}]".format(j-1)
         driver.find_element_by_xpath(node_x_path).click()
         j = j + 1
 
@@ -210,9 +215,9 @@ def orchestrator_nodes():
             driver.find_element_by_xpath(combo).click()
             time.sleep(1)
             # Click master and node to remove it
-            master_node_x_path = "(//li/span[text()='kubernetes_master_node'])[{}]".format(j-1)
+            master_node_x_path = "(//li[text()='kubernetes_master_node'])[{}]".format(j-1)
             driver.find_element_by_xpath(master_node_x_path).click()
-            node_x_path = "(//li/span[text()='kubernetes_node'])[{}]".format(j-1)
+            node_x_path = "(//li[text()='kubernetes_node'])[{}]".format(j-1)
             driver.find_element_by_xpath(node_x_path).click()
             j = j + 1
 
@@ -225,9 +230,9 @@ def orchestrator_nodes():
         driver.find_element_by_xpath(combo).click()
         time.sleep(1)
         # Clicking master and manager to remove it
-        master_node_x_path = "(//li/span[text()='kubernetes_master_node'])[{}]".format(j-1)
+        master_node_x_path = "(//li[text()='kubernetes_master_node'])[{}]".format(j-1)
         driver.find_element_by_xpath(master_node_x_path).click()
-        kube_manager_x_path = "(//li/span[text()='kubernetes_kubemanager_node'])[{}]".format(j-1)
+        kube_manager_x_path = "(//li[text()='kubernetes_kubemanager_node'])[{}]".format(j-1)
         driver.find_element_by_xpath(kube_manager_x_path).click()
         j = j + 1
 
