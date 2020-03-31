@@ -32,12 +32,12 @@ for k,v in instances_data['instances'].items():
 for k,v in instances_data['control_data'].items():
     cntl_ip_list.append(v['ctrldata_ip'])
 
-insecure = instances_data['REGISTRY_PRIVATE_INSECURE']
-container_registry = instances_data['CONTAINER_REGISTRY']
+insecure = instances_data['contrail_configuration']['REGISTRY_PRIVATE_INSECURE']
+container_registry = instances_data['contrail_configuration']['CONTAINER_REGISTRY']
 
 if not insecure:
-    container_registry_username = instances_data['CONTAINER_REGISTRY_USERNAME']
-    container_registry_password = instances_data['CONTAINER_REGISTRY_PASSWORD']
+    container_registry_username = instances_data['contrail_configuration']['CONTAINER_REGISTRY_USERNAME']
+    container_registry_password = instances_data['contrail_configuration']['CONTAINER_REGISTRY_PASSWORD']
 
 contrail_version = instances_data['contrail_configuration']['CONTRAIL_VERSION']
 ntp_server = instances_data['provider_config']['bms']['ntpserver']
@@ -62,7 +62,10 @@ for node, value in instances_data['instances'].items():
         print("k8s_node:",node)
 
 # Chrome driver
-driver = webdriver.Chrome("driver/chromedriver")
+options = webdriver.ChromeOptions()
+options.add_argument('--allow-running-insecure-content')
+options.add_argument('--ignore-certificate-errors')
+driver = webdriver.Chrome("driver/chromedriver", chrome_options=options)
 
 driver.set_page_load_timeout(25)
 
