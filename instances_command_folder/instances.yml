@@ -1,6 +1,7 @@
 global_configuration:
   REGISTRY_PRIVATE_INSECURE: True
   CONTAINER_REGISTRY: bng-artifactory.juniper.net/contrail-nightly
+  K8S_VERSION: 1.14.8
 provider_config:
   bms:
     ssh_pwd: c0ntrail123
@@ -44,7 +45,7 @@ contrail_configuration:
   KUBERNETES_API_SERVER: 10.204.217.4
   CONTAINER_REGISTRY: bng-artifactory.juniper.net/contrail-nightly
   REGISTRY_PRIVATE_INSECURE: True
-  CONTRAIL_VERSION: "1912.37"
+  CONTRAIL_VERSION: "master.1152"
   RABBITMQ_NODE_PORT: 5673
   VROUTER_GATEWAY: 10.204.217.254
   LOG_LEVEL: SYS_DEBUG

@@ -134,8 +134,7 @@ def cloud_manager():
     driver.execute_script("arguments[0].scrollTo(0,500)", element)
     driver.find_element_by_xpath("//label[text()='Encapsulation Priority']/following-sibling::div[@class]").click()
     time.sleep(1)
-    driver.find_element_by_xpath(
-        "//li[text()='VXLAN,MPLSoUDP,MPLSoGRE']").click()
+    driver.find_element_by_xpath("//div//span[text()='VXLAN,MPLSoUDP,MPLSoGRE']").click()
 
     # Contrail Configuration
     element = driver.find_element_by_class_name('arrow')
@@ -173,8 +172,8 @@ def control_nodes():
         driver.find_element_by_xpath(combo_xpath).click()
         time.sleep(1)
         # import pdb;pdb.set_trace()
-        alarm_x_path = "(//li[text()='contrail_analytics_alarm_node'])[{}]".format(j)
-        snmp_x_path = "(//li[text()='contrail_analytics_snmp_node'])[{}]".format(j)
+        alarm_x_path = "(//li/span[text()='contrail_analytics_alarm_node'])[{}]".format(j)
+        snmp_x_path = "(//li/span[text()='contrail_analytics_snmp_node'])[{}]".format(j)
         driver.find_element_by_xpath(alarm_x_path).click()
         time.sleep(1)
         driver.find_element_by_xpath(snmp_x_path).click()
@@ -188,7 +187,7 @@ def orchestrator_nodes():
     combo_xpath = "(//div[@role='combobox'])[{}]"
     driver.find_element_by_css_selector(".ant-select-selection__rendered").click()
     time.sleep(1)
-    driver.find_element_by_xpath("//li[text()='Kubernetes']").click()
+    driver.find_element_by_xpath("//li/span[text()='Kubernetes']").click()
 
     j = 2
     # import pdb;pdb.set_trace()
@@ -201,7 +200,7 @@ def orchestrator_nodes():
         driver.find_element_by_xpath(combo).click()
         time.sleep(1)
         # Click kubernetes_node to remove it
-        node_x_path = "(//li[text()='kubernetes_node'])[{}]".format(j-1)
+        node_x_path = "(//li/span[text()='kubernetes_node'])[{}]".format(j-1)
         driver.find_element_by_xpath(node_x_path).click()
         j = j + 1
 
@@ -215,9 +214,9 @@ def orchestrator_nodes():
             driver.find_element_by_xpath(combo).click()
             time.sleep(1)
             # Click master and node to remove it
-            master_node_x_path = "(//li[text()='kubernetes_master_node'])[{}]".format(j-1)
+            master_node_x_path = "(//li/span[text()='kubernetes_master_node'])[{}]".format(j-1)
             driver.find_element_by_xpath(master_node_x_path).click()
-            node_x_path = "(//li[text()='kubernetes_node'])[{}]".format(j-1)
+            node_x_path = "(//li/span[text()='kubernetes_node'])[{}]".format(j-1)
             driver.find_element_by_xpath(node_x_path).click()
             j = j + 1
 
@@ -230,9 +229,9 @@ def orchestrator_nodes():
         driver.find_element_by_xpath(combo).click()
         time.sleep(1)
         # Clicking master and manager to remove it
-        master_node_x_path = "(//li[text()='kubernetes_master_node'])[{}]".format(j-1)
+        master_node_x_path = "(//li/span[text()='kubernetes_master_node'])[{}]".format(j-1)
         driver.find_element_by_xpath(master_node_x_path).click()
-        kube_manager_x_path = "(//li[text()='kubernetes_kubemanager_node'])[{}]".format(j-1)
+        kube_manager_x_path = "(//li/span[text()='kubernetes_kubemanager_node'])[{}]".format(j-1)
         driver.find_element_by_xpath(kube_manager_x_path).click()
         j = j + 1
 
