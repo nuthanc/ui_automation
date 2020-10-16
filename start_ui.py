@@ -11,7 +11,7 @@ with open('instances_command_folder/command_servers.yml') as f:
 
 # Variables
 username = "admin"
-password = "contrail123"
+password = "c0ntrail123"
 cluster_name = "test_ui2"
 domain_suffix = "englab.juniper.net"
 

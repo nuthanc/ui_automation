@@ -6,7 +6,7 @@ deployment:
             registry: bng-artifactory.juniper.net/contrail-nightly
     sku: queens
     os: centos7
-    version: "2008.89"
+    version: "2011.19"
     orchestrator: kubernetes
     deployer: contrail-ansible-deployer
 
@@ -80,7 +80,7 @@ contrail_configuration:
   KUBERNETES_API_SERVER: 77.77.1.20
   CONTAINER_REGISTRY: bng-artifactory.juniper.net/contrail-nightly
   REGISTRY_PRIVATE_INSECURE: True
-  CONTRAIL_VERSION: "2008.89"
+  CONTRAIL_VERSION: "2011.19"
   RABBITMQ_NODE_PORT: 5673
   VROUTER_GATEWAY: 77.77.1.100
   JVM_EXTRA_OPTS: "-Xms1g -Xmx2g"
